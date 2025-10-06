@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Catalogo</title>
   <style>
     body {
@@ -13,6 +13,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
     }
 
     h1 {
@@ -21,50 +23,40 @@
       text-align: center;
     }
 
-    #pdf-viewer {
-      width: 90%;
-      max-width: 800px;
+    .pdf-container {
+      width: 95%;
+      max-width: 1200px;
+      height: calc(100vh - 80px);
     }
 
-    canvas {
-      width: 100% !important;
-      height: auto !important;
-      margin-bottom: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    .pdf-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    @media (max-width: 768px) {
+      .pdf-container {
+        height: 80vh;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+      .pdf-container {
+        height: 70vh;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Catálogo</h1>
-  <div id="pdf-viewer"></div>
-
-  <!-- PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.110/pdf.min.js"></script>
-  <script>
-    const url = 'catalogo.pdf'; // tu PDF aquí
-
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.110/pdf.worker.min.js';
-
-    const loadingTask = pdfjsLib.getDocument(url);
-    loadingTask.promise.then(pdf => {
-      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-        pdf.getPage(pageNum).then(page => {
-          const viewport = page.getViewport({ scale: 1.5 });
-          const canvas = document.createElement('canvas');
-          document.getElementById('pdf-viewer').appendChild(canvas);
-          const context = canvas.getContext('2d');
-          canvas.height = viewport.height;
-          canvas.width = viewport.width;
-          page.render({ canvasContext: context, viewport: viewport });
-        });
-      }
-    }).catch(err => {
-      console.error('Error cargando el PDF:', err);
-      const viewer = document.getElementById('pdf-viewer');
-      viewer.innerHTML = '<p>No se pudo cargar el PDF.</p>';
-    });
-  </script>
+  <div class="pdf-container">
+    <iframe src="catalogo.pdf"></iframe>
+  </div>
 </body>
 </html>
